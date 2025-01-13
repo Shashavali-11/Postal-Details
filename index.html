@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
+          ),
+          url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVNgTKXZvKt0i5q3IPR7j_omemBtdUMWBssQ&s")
+            no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      #root {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px 40px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        animation: slideIn 1s ease-in-out;
+      }
+
+      select {
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        width: 100%;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1s ease-in-out;
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      select:focus {
+        outline: none;
+        box-shadow: 0 0 10px #fff;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background: #ff6a00;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s, box-shadow 0.3s;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 1rem;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+
+  </head>
+  <body>
+        <div id="root">
+          <h1>Select a option to get details.</h1>
+          <select id="options">
+            <option value="" disabled selected>Select a Station...</option>
+            <option value="pincode">PINCODE</option>
+            <option value="postal">POST OFFICE AREA</option>
+
+          </select>
+          <button id="btn1">Search Post</button>
+          <div id="result"></div>
+        </div>
+
+    <script>
+      document.getElementById("btn1").addEventListener("click", ()=>{
+        category = document.getElementById("options").value;
+
+        if (!category) {
+                alert("Please select a category!");
+                return;
+        }
+        if(category == "pincode"){window.open("pincode.html")}
+        if(category == "postal"){window.open("postoffice.html")}
+
+      })
+
+
+        
+     
+
+    </script>
+  </body>
+</html>

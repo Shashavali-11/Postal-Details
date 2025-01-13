@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PostOffice</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("https://wallpapers.com/images/hd/british-red-post-office-46e1ltxsuvvlegl1.jpg")
+            no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+      }
+      h1 {
+        font-size: 3rem;
+        color: #ffffff;
+        text-align: center;
+        margin: 0;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        font-family: "Arial", sans-serif;
+        letter-spacing: 1px;
+        line-height: 1.2;
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+
+      h1:hover {
+        transform: scale(1.05);
+        color: skyblue;
+      }
+
+      #root {
+        margin: 70px auto;
+        text-align: center;
+      }
+
+      #ip1 {
+        width: 30%;
+        padding: 12px;
+        font-size: 18px;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        outline: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      #ip1:focus {
+        transform: scale(1);
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+      }
+
+      #btn {
+        padding: 12px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      #btn:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.7);
+      }
+
+      #result {
+        margin: 20px auto;
+        width: 50%;
+        padding: 10px;
+        border-radius: 10px;
+        overflow-y: auto;
+        max-height: 70vh;
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 20px;
+        scroll-behavior: smooth;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        transform: translateY(10px);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      #loading span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 0 4px;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: blink 1.2s infinite;
+      }
+
+      #loading span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      #loading span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes blink {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <h1>Search By Area</h1>
+      <br />
+      <input type="text" id="ip1" placeholder="Search Area..." />
+      <button id="btn">Search</button>
+      <div id="loading"><span></span><span></span><span></span></div>
+    </div>
+    <div id="result"></div>
+
+    <script>
+      let ip1 = document.getElementById("ip1");
+      let button = document.getElementById("btn");
+      const result = document.getElementById("result");
+      const loading = document.getElementById("loading");
+
+      ip1.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          button.click();
+        }
+      });
+
+      button.addEventListener("click", () => {
+        const query = ip1.value.trim();
+        result.innerHTML = "";
+        loading.style.display = "block";
+
+        if (!query) {
+          loading.style.display = "none";
+          const out = document.createElement("p");
+          out.innerHTML = "Enter input field...";
+          result.appendChild(out);
+        } else {
+          postoffice(query);
+        }
+      });
+
+      async function postoffice(posto) {
+        const api2 = `https://api.postalpincode.in/postoffice/${posto}`;
+        try {
+          const response = await fetch(api2);
+          const data = await response.json();
+
+          loading.style.display = "none";
+
+          if (data[0].Status === "Success") {
+            data[0].PostOffice.map((val) => {
+              if (val.Region == val.District) {
+                console.log(val);
+                console.log(val.Region);
+                console.log(val.District);
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                  <p><strong>Division:</strong> ${val.Name}</p>
+                  <p><strong>Pincode:</strong> ${val.Pincode}</p>
+                  <p><strong>Post Office Type:</strong> ${val.BranchType}</p>
+                  <p><strong>District:</strong> ${val.District}</p>
+                  <p><strong>State:</strong> ${val.State}</p>
+                `;
+                result.appendChild(card);
+              }
+            });
+          } else {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `<p>No data found for the given input.</p>`;
+            result.appendChild(card);
+          }
+        } catch (error) {
+          loading.style.display = "none";
+          const errorCard = document.createElement("div");
+          errorCard.className = "card";
+          errorCard.innerHTML = `<p>Something went wrong. Please try again later.</p>`;
+          result.appendChild(errorCard);
+          console.error(error);
+        }
+      }
+    </script>
+  </body>
+</html>
